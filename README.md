@@ -1,6 +1,25 @@
 # Credit Card Default Prediction
 
-Objective of this project is to predict which customers may default in upcoming months. Credit card default occurs when you have become severely delinquent on your credit card payments.Missing credit card payments once or twice does not count as a default. A payment default occurs when you fail to pay the Minimum Amount Due on the credit card for a few consecutive months.
+Objective of this project is to predict which customers may default in upcoming months. Credit card default occurs when you have become severely delinquent on your credit card payments. Missing credit card payments once or twice does not count as a default. A payment default occurs when you fail to pay the Minimum Amount Due on the credit card for a few consecutive months.
+
+## Table of Contents
+
+1. Dataset Information
+2. Deliverables
+3. Assumptions
+
+* Key Metric
+* Business Impact
+* General Assumptions
+* Constraints
+
+4. MVP Roadmap and Time Allocation
+5. Future Work
+6. Set up
+7. Repo Structure
+8. Tools
+9. Dataset Content
+10. Authors and acknowledgement
 
 ## Dataset Information
 
@@ -21,7 +40,7 @@ The key evaluation metric selected for this classification task is F1 score to b
 
 Other metrics that will be tracked including ROC-AUC score, precision, and recall. ROC-AUC score is a measure of the model's overall ability to distinguish between customers who will default and those who won't, across a range of thresholds. A higher ROC-AUC score means the model is better at identifying true defaulters as well as true non-defaulters, across various decision thresholds.
 
-#### Business Impact
+### Business Impact
 
 If we predict too many false defaults (low precision), we might unnecessarily restrict credit opportunities to potentially good customers, affecting customer relationships and potential revenue. Conversely, if we fail to identify actual defaulters (low recall), the company risks financial losses. The F1 score helps us find a middle ground, optimizing both aspects.
 
@@ -31,6 +50,7 @@ The following assumptions were made for this project:
 
 * The selected model will be consider both explainability and performance, for instance it is likely ensemble models will be most performant but these are more difficult to explain
 * Model will output a probability and a threshold will be set to determine the label rather than a binary 1/0
+* Dimensionality reduction is not required as the dataset is relatively small
 * Time period of synthetic generation is to be xxx
 * Assume latency/inference times are not a consideration for model selection and to focus on inference
 * Apply `Black` for automated styling
@@ -68,14 +88,18 @@ With a budget of 12 hours for this project, time will be distributed below to me
         * Apply standardisation and scaling
         * Convert categorical variables with one-hot encoding (N-1)
     * Use AutoML framework to test many models and for automatic hyperparameter optmisation
-    * Apply further feature engineering and class rebalancing
+    * Apply further feature engineering and class rebalancing / resampling
+        * NOTE: Feature transformations and class resampling will only be applied to training splits to prevent data leakage
     * Reapply AutoML framework with new data
+    * Create feature importance plots
 5. Generate new synthetic dataset (10%)
 6. Export requirements.txt
 7. Create presentation (20%)
 8. Update README (5%)
+    * Add section on approach and considerations
     * Add set up instructions
     * Add repo structure
+    * Update TOC
 
 ## Future Work
 
@@ -90,15 +114,14 @@ For tabular machine learning tasks, feature engineering can have the largest imp
 With more time, the following features could be explored or implemented:
 
 * the constraints mentioned in above Constraints section
-* manually test and evaluate models with hyperparameter optimisation with grid search, random search, or `hyperopt` framework
+* manually test and evaluate models with hyperparameter optimisation with grid search, random search, or `Optuna` framework
+* convert jupyter notebooks into python scripts
 * set up `MLflow` and `Dagshub` for collaborative experiment and model tracking
 * apply GitHub pre-commit hooks and GitHub Actions for automated testing and styling
 * use Explainable AI techniques to understand the model, such as `SHAP` and `LIME` methods
 * compare inference speeds of different models
 * make the model deployable through a `REST API` using `FastAPI` or via a front end interface, such as `Flask` or `Streamlit`.
 * containerise and deploy the model with Docker
-
-## Model Selection
 
 ## Set Up
 
@@ -108,12 +131,38 @@ With more time, the following features could be explored or implemented:
 
 ## Repo Structure
 
+```bash
+.
+├── LICENSE
+├── README.md
+├── data
+│   ├── processed
+│   │   └── processed-data.csv
+│   └── raw
+│       └── credit_card_default.csv
+├── notebooks
+│   ├── 1_exploration-analysis.ipynb
+│   ├── 1_exploration-auto-datavis.ipynb
+│   ├── 2_model-training.ipynb
+│   ├── 3_automl.ipynb
+│   ├── 4_synthetic-data-generation.ipynb
+├── outputs
+│   ├── pandas-profiling-report.html
+│   ├── synth_data_ctgan.csv
+│   └── synth_data_gaussian.csv
+├── requirements.txt
+└── src
+    ├── preprocessing.py
+    └── training.py
+```
+
 ## Tools
 
 Tools used in this project:
 
 * `ydata-profiling` (previously `pandas-profiling`) and `dabl` for quick exploratory data analysis and correlations on raw data
-* `mljar-supervised` for AutoML, has inbuilt `hyperopt` functionality for auto hyperparameter tuning
+* `mljar-supervised` for AutoML, has inbuilt `Optuna` functionality for auto hyperparameter tuning
+* `ydata-synthetic` for synthetic data generation with state-of-the-art neural networks for tabular and time-series data.
 
 ## Dataset Content
 
